@@ -18,11 +18,11 @@ if (isset($data["email"])) {
 	
 	if (validateUser($email,$userId)) {
 		if(trim($newPassword) != ''){	
-			$qq = mysqli_query($conn,"select * from supplier where supplier_id='$userId' and supplier_email='$email'");
+			$qq = mysqli_query($conn,"select * from clients where client_id='$userId' and client_email='$email'");
 			if(mysqli_num_rows($qq) == 1){
 				while($r = mysqli_fetch_assoc($qq)){
 					if(md5($currentPassword) == $r['password']){
-						$q = mysqli_query($conn, "update supplier set password='".md5($newPassword)."' where supplier_id='$userId' and supplier_email='$email'");
+						$q = mysqli_query($conn, "update clients set password='".md5($newPassword)."' where client_id='$userId' and client_email='$email'");
 						if($q){
 							$obj = new StdClass();
 							$obj->msg = "Your password has been updated successful.";
