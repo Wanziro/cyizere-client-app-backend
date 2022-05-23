@@ -14,7 +14,7 @@ $Arr = array();
 $qx = mysqli_query($conn, "select * from category order by category_name asc");
 while ($row = mysqli_fetch_assoc($qx)) {
 	$obj = new StdClass();
-	$obj->image = $row['image'];
+	$obj->image = is_null($row['image'])?'':$row['image'];
 	$obj->id = $row['category_id'];
 	$obj->name = $row['category_name'];
 	array_push($Arr, $obj);
