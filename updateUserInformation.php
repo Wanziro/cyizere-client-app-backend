@@ -10,22 +10,35 @@ $data = json_decode(file_get_contents("php://input"), true);
 include 'connect.php';
 include 'fxs.php';
 
+function validatePhone($phone,$email){
+	include 'connect.php';
+	$q = mysqli_query($conn, "select * from clients where client_phone='$phone' and client_email!='$email'");
+	if(mysqli_num_rows($q) > 0){
+		return true;
+	}else{
+		return false;
+	}
+
+}
+
 if (isset($data["email"])) {
 	$email = mysqli_real_escape_string($conn,$data['email']);
 	$userId = mysqli_real_escape_string($conn,$data['userId']);
-	$openingHours = mysqli_real_escape_string($conn,$data['openingHours']);
-	$closingHours = mysqli_real_escape_string($conn,$data['closingHours']);
-	$ownerName = mysqli_real_escape_string($conn,$data['ownerName']);
+	$names = mysqli_real_escape_string($conn,$data['names']);
 	$address = mysqli_real_escape_string($conn,$data['address']);
-	$companyName = mysqli_real_escape_string($conn,$data['companyName']);
 	$phone = mysqli_real_escape_string($conn,$data['phone']);
 	
-	if (validateUser($email,$userId)) {
-		if(trim($companyName) != ''){				
-			$q = mysqli_query($conn, "update supplier set supplier_name='$ownerName',company_name='$companyName',supplier_contact='$phone',supplier_address='$address',start_from='$openingHours',end_time='$closingHours' where supplier_id='$userId' and supplier_email='$email'");
+	if(validatePhone($phone,$email)){
+		$obj = new StdClass();
+		$obj->msg= "Phone number already exists";
+        $obj->type= "error";
+        echo json_encode($obj);
+	}else if (validateUser($email,$userId)) {
+		if(trim($phone) != ''){				
+			$q = mysqli_query($conn, "update clients set client_name='$names',client_phone='$phone',client_address='$address',client_phone='$phone' where client_id='$userId' and client_email='$email'");
 			if($q){
 				$obj = new StdClass();
-				$obj->msg = "Merchant's information has been updated successful.";
+				$obj->msg = "Your information has been updated successful.";
 				$obj->type = "success";
 				echo json_encode($obj);
 			}else{

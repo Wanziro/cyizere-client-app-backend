@@ -6,7 +6,7 @@ function markAllCodesAsExpired($userId){
 
 function validateUser($email,$userId){
 	include 'connect.php';
-	$q = mysqli_query($conn, "select * from supplier where supplier_id='$userId' and supplier_email='$email'");
+	$q = mysqli_query($conn, "select * from clients where client_email='$email' and client_id='$userId'");
 	if (mysqli_num_rows($q) == 1) {
 		return true;
 	}else{
@@ -43,7 +43,7 @@ function getProductImages($id){
 
 function userObject($username){
 	include 'connect.php';
-	$q = mysqli_query($conn, "select * from users where username='$username'");
+	$q = mysqli_query($conn, "select * from clients where username='$username'");
 	if (mysqli_num_rows($q) == 1) {
 		while ($row = mysqli_fetch_assoc($q)) {
 			$obj = new StdClass();

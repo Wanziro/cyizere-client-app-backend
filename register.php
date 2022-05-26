@@ -35,7 +35,6 @@ if (isset($data["email"])) {
 	$name = mysqli_real_escape_string($conn,$data['name']);
 	$phone = mysqli_real_escape_string($conn,$data['phone']);
 	$email = mysqli_real_escape_string($conn,$data['email']);
-	$address = mysqli_real_escape_string($conn,$data['address']);
 	$password = mysqli_real_escape_string($conn,$data['password']);
 	if(validateEmail($email)){
 		$obj = new StdClass();
@@ -46,8 +45,9 @@ if (isset($data["email"])) {
 		$obj = new StdClass();
 		$obj->msg= "Phone number already exists.";
         $obj->type= "error";
+	    echo json_encode($obj);
 	}else{
-		$q = mysqli_query($conn, "insert into clients(client_name,client_phone,client_phone,client_email,client_address,password,is_active) values('$name','$phone','$email','$address','".md5($password)."','1')");
+		$q = mysqli_query($conn, "insert into clients(client_name,client_phone,client_email,client_address,password,is_active) values('$name','$phone','$email','-','".md5($password)."','1')");
 		if($q){
 			$get = mysqli_query($conn,"SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA='".$DB_NAME."' AND TABLE_NAME='clients'");
 			while($row_id = mysqli_fetch_assoc($get)){
@@ -59,7 +59,6 @@ if (isset($data["email"])) {
 			$userObj->name = $name;
 			$userObj->phone = $phone;
 			$userObj->email = $email;
-			$userObj->address = $address;
 			//user object
 
 			$obj = new StdClass();
